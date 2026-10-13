@@ -1,11 +1,18 @@
-import { mockIssues } from "../data/mockIssues";
-
-function IssueList() {
+function IssueList({ issues, onDelete, onChangeStatus }) {
   return (
     <ul>
-      {mockIssues.map((issue) => (
+      {issues.map((issue) => (
         <li key={issue.id}>
-          {issue.title} — {issue.status} — {issue.priority}
+          {issue.title} — {issue.priority}{" "}
+          <select
+            value={issue.status}
+            onChange={(e) => onChangeStatus(issue.id, e.target.value)}
+          >
+            <option value="todo">todo</option>
+            <option value="in-progress">in-progress</option>
+            <option value="done">done</option>
+          </select>{" "}
+          <button onClick={() => onDelete(issue.id)}>Delete</button>
         </li>
       ))}
     </ul>
