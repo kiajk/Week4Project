@@ -1,16 +1,110 @@
-# React + Vite
+Issue Tracker Lite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple issue management application built with React and Vite.
 
-Currently, two official plugins are available:
+Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+* Add new issues
+* Edit existing issues
+* Delete issues
+* Change issue status
+* Search issues by title
+* Filter issues by status
+* Validate issue forms
+* Manage issue data with useReducer
 
-## React Compiler
+Component Tree
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+App
+└── IssueTracker
+    ├── IssueForm
+    ├── IssueSearch
+    ├── IssueStatusFilter
+    └── IssueList
+        └── EditIssueForm
 
-## Expanding the ESLint configuration
+Component Responsibilities
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+App
+
+* Entry point of the application UI.
+* Renders the main issue-tracking interface.
+
+IssueTracker
+
+* Coordinates the main application interface.
+* Connects issue management logic to the UI.
+* Manages search, status filtering, and editing state.
+* Passes the necessary data and callbacks to child components.
+
+IssueForm
+
+* Collects information for a new issue.
+* Validates the form data.
+* Calls the provided callback to add a new issue.
+* Resets the form after successful submission.
+
+IssueSearch
+
+* Collects the search term.
+* Notifies the parent component when the search term changes.
+
+IssueStatusFilter
+
+* Allows users to filter issues by status.
+* Notifies the parent component when the selected status changes.
+
+IssueList
+
+* Renders the filtered list of issues.
+* Provides controls for changing status, editing, and deleting issues.
+* Displays EditIssueForm when an issue is being edited.
+
+EditIssueForm
+
+* Initializes the form with the selected issue’s data.
+* Validates updated issue information.
+* Saves valid changes or cancels editing.
+
+State Management
+
+useIssues
+
+A custom hook that provides issue-related operations, including adding, updating, deleting, and changing the status of issues.
+
+issuesReducer
+
+Handles issue state transitions through actions such as:
+
+* ADD_ISSUE
+* UPDATE_ISSUE
+* DELETE_ISSUE
+* CHANGE_STATUS
+
+filterIssues
+
+A utility function that derives the visible issue list from the complete issue collection, search term, and selected status.
+
+Filtering does not require separate state because the filtered list can be calculated from existing values.
+
+validateIssue
+
+A utility function that validates issue data before it is added or updated.
+
+Technologies
+
+* React
+* Vite
+* JavaScript
+* React Hooks
+* Context API (planned)
+
+Getting Started
+
+Install dependencies:
+
+npm install
+
+Start the development server:
+
+npm run dev
