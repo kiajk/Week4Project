@@ -12,29 +12,39 @@ Features
 * Filter issues by status
 * Validate issue forms
 * Manage issue data with useReducer
+* Switch between light and dark themes using Context API
 
 Component Tree
 
 App
-└── IssueTracker
-    ├── IssueForm
-    ├── IssueSearch
-    ├── IssueStatusFilter
-    └── IssueList
-        └── EditIssueForm
+└── ThemeProvider (Context API)
+    └── IssueTracker
+        ├── IssueForm
+        ├── IssueSearch
+        ├── IssueStatusFilter
+        └── IssueList
+            └── EditIssueForm
 
 Component Responsibilities
 
 App
 
 * Entry point of the application UI.
+* Wraps the application in ThemeProvider.
 * Renders the main issue-tracking interface.
+
+ThemeProvider
+
+* Provides the current theme (light or dark) through Context API.
+* Exposes a toggleTheme function to switch between themes.
+* Keeps theme preferences separate from issue data.
 
 IssueTracker
 
 * Coordinates the main application interface.
 * Connects issue management logic to the UI.
 * Manages search, status filtering, and editing state.
+* Reads the theme and theme-toggle function from ThemeContext.
 * Passes the necessary data and callbacks to child components.
 
 IssueForm
@@ -70,7 +80,7 @@ State Management
 
 useIssues
 
-A custom hook that provides issue-related operations, including adding, updating, deleting, and changing the status of issues.
+A custom hook that provides issue-related operations, including adding, updating, deleting, and changing the status of issues. It encapsulates issue state management using useReducer.
 
 issuesReducer
 
@@ -80,6 +90,12 @@ Handles issue state transitions through actions such as:
 * UPDATE_ISSUE
 * DELETE_ISSUE
 * CHANGE_STATUS
+
+ThemeContext
+
+Provides the current theme (light or dark) and a toggleTheme function to components inside ThemeProvider.
+
+Theme state is managed separately from issue data because it represents a UI preference rather than application issue data.
 
 filterIssues
 
@@ -97,14 +113,16 @@ Technologies
 * Vite
 * JavaScript
 * React Hooks
-* Context API (planned)
+* useReducer
+* Context API
+* CSS
 
 Getting Started
 
-Install dependencies:
+Install dependencies
 
 npm install
 
-Start the development server:
+Start the development server
 
 npm run dev
