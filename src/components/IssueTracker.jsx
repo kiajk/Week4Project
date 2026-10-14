@@ -5,8 +5,11 @@ import IssueList from "./IssueList";
 import { useIssues } from "../hooks/useIssues";
 import { filterIssues } from "../utils/filterIssues";
 import IssueStatusFilter from "./IssueStatusFilter";
+import { useContext } from "react";
+import { ThemeContext } from "../context/ThemeContext";
 
 function IssueTracker() {
+  const { theme, toggleTheme } = useContext(ThemeContext);
   const { issues, addIssue, deleteIssue, changeStatus, updateIssue } = useIssues();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -23,8 +26,12 @@ function IssueTracker() {
   setEditingIssue(null);
     };
   return (
-    <main>
+    <main className={`app ${theme}`}>
       <h1>Issue Tracker Lite</h1>
+
+      <button type="button" onClick={toggleTheme}>
+        Switch to {theme === "light" ? "Dark" : "Light"} Mode
+      </button>
 
       <IssueForm onAddIssue={addIssue} />
 
