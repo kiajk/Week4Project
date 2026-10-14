@@ -1,7 +1,15 @@
-import { ADD_ISSUE, DELETE_ISSUE, CHANGE_STATUS } from "./issuesActions";
+import { ADD_ISSUE, DELETE_ISSUE, CHANGE_STATUS,  UPDATE_ISSUE } from "./issuesActions";
 
 function addIssue(issues, newIssue) {
   return [...issues, newIssue];
+}
+
+function updateIssue(issues, updatedIssue) {
+  return issues.map((issue) =>
+    issue.id === updatedIssue.id
+      ? { ...issue, ...updatedIssue }
+      : issue
+  );
 }
 
 function deleteIssue(issues, id) {
@@ -22,6 +30,8 @@ export function issuesReducer(issues, action) {
       return deleteIssue(issues, action.payload.id);
     case CHANGE_STATUS:
       return changeStatus(issues, action.payload.id, action.payload.status);
+    case UPDATE_ISSUE:
+      return updateIssue(issues, action.payload);
     default:
       return issues;
   }

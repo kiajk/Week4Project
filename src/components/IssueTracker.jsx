@@ -7,12 +7,21 @@ import { filterIssues } from "../utils/filterIssues";
 import IssueStatusFilter from "./IssueStatusFilter";
 
 function IssueTracker() {
-  const { issues, addIssue, deleteIssue, changeStatus } = useIssues();
+  const { issues, addIssue, deleteIssue, changeStatus, updateIssue } = useIssues();
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [editingIssue, setEditingIssue] = useState(null);
   const [statusFilter, setStatusFilter] = useState("all");
   const filteredIssues = filterIssues(issues, searchTerm, statusFilter);
 
+  const handleSaveEdit = (updatedIssue) => {
+  updateIssue(updatedIssue);
+  setEditingIssue(null);
+    };
+
+  const handleCancelEdit = () => {
+  setEditingIssue(null);
+    };
   return (
     <main>
       <h1>Issue Tracker Lite</h1>
@@ -30,6 +39,10 @@ function IssueTracker() {
         issues={filteredIssues}
         onDelete={deleteIssue}
         onChangeStatus={changeStatus}
+        editingIssueId={editingIssue?.id}
+        onEdit={setEditingIssue}
+        onSaveEdit={handleSaveEdit}
+        onCancelEdit={handleCancelEdit}
       />
     </main>
   );

@@ -18,5 +18,11 @@ export function useIssues() {
   const changeStatus = (id, status) =>
     dispatch({ type: CHANGE_STATUS, payload: { id, status } });
 
-  return { issues, addIssue, deleteIssue, changeStatus };
+  const updateIssue = (updatedIssue) =>
+     dispatch({
+    type: UPDATE_ISSUE,
+    payload: updatedIssue,
+  });
+
+  return { issues, addIssue, deleteIssue, changeStatus, updateIssue };
 }
