@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { validateIssue } from "../utils/validateIssue";
+import useUsers from "../hooks/useUsers";
 
 function IssueForm({ onAddIssue }) {
+  const { users, loading, error, retry } = useUsers();
   const [title, setTitle] = useState("");
   const [priority, setPriority] = useState("medium");
   const [status, setStatus] = useState("todo");
@@ -65,13 +67,32 @@ function IssueForm({ onAddIssue }) {
     <form onSubmit={handleSubmit}>
       <h2>Add New Issue</h2>
 
-      <input
-        type="text"
-        value={title}
-        onChange={handleTitleChange}
-        placeholder="Issue title"
-        required
-      />
+      {loading ? (
+        <p>Loading users...</p>
+          ) : error ? (
+        <div>
+           <p role="alert">{error}</p>
+            <button type="button" onClick={retry}>
+            Retry
+           </button>
+          </div>
+          ): users.length === 0 ? (
+         <p>No users available.</p>
+        ) : (
+          <select
+           value={assignee}
+            onChange={handleAssignee}
+             required
+          >
+        <option value="">Select an assignee</option>
+
+          {users.map((user) => (
+            <option key={user.id} value={user.name}>
+            {user.name}
+          </option>
+          ))}
+        </select>
+      )}
       {errors.title && <p>{errors.title}</p>}
       {errors.assignee && <p>{errors.assignee}</p>}
       {errors.priority && <p>{errors.priority}</p>}
