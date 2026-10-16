@@ -5,6 +5,7 @@ import {
   ADD_ISSUE,
   DELETE_ISSUE,
   CHANGE_STATUS,
+  UPDATE_ISSUE,
 } from "../reducers/issuesActions";
 
 export function useIssues() {

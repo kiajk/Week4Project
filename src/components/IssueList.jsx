@@ -1,6 +1,8 @@
+import { Link, useLocation } from "react-router";
 import EditIssueForm from "./EditIssueForm";
+
 function IssueList({
-  issues,
+  issues = [],
   onDelete,
   onChangeStatus,
   editingIssueId,
@@ -8,6 +10,8 @@ function IssueList({
   onSaveEdit,
   onCancelEdit,
 }) {
+  const location = useLocation();
+
   return (
     <ul>
       {issues.map((issue) => (
@@ -20,8 +24,19 @@ function IssueList({
             />
           ) : (
             <>
-              <strong>{issue.title}</strong> — {issue.priority} —{" "}
+              <strong>
+                <Link
+                  to={`/issues/${issue.id}${location.search}`}
+                >
+                  {issue.title}
+                </Link>
+              </strong>
+
+              {" — "}
+              {issue.priority}
+              {" — "}
               {issue.assignee}
+
               <select
                 value={issue.status}
                 onChange={(event) =>
@@ -32,12 +47,14 @@ function IssueList({
                 <option value="in-progress">In Progress</option>
                 <option value="done">Done</option>
               </select>
+
               <button
                 type="button"
                 onClick={() => onEdit(issue)}
               >
                 Edit
               </button>
+
               <button
                 type="button"
                 onClick={() => onDelete(issue.id)}
@@ -51,4 +68,5 @@ function IssueList({
     </ul>
   );
 }
+
 export default IssueList;

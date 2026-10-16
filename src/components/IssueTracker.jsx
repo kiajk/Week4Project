@@ -1,30 +1,76 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { useSearchParams } from "react-router";
+
 import IssueForm from "./IssueForm";
 import IssueSearch from "./IssueSearch";
 import IssueList from "./IssueList";
+import IssueStatusFilter from "./IssueStatusFilter";
+
 import { useIssues } from "../hooks/useIssues";
 import { filterIssues } from "../utils/filterIssues";
-import IssueStatusFilter from "./IssueStatusFilter";
-import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 
 function IssueTracker() {
   const { theme, toggleTheme } = useContext(ThemeContext);
-  const { issues, addIssue, deleteIssue, changeStatus, updateIssue } = useIssues();
 
-  const [searchTerm, setSearchTerm] = useState("");
+  const {
+    issues,
+    addIssue,
+    deleteIssue,
+    changeStatus,
+    updateIssue,
+  } = useIssues();
+
   const [editingIssue, setEditingIssue] = useState(null);
-  const [statusFilter, setStatusFilter] = useState("all");
-  const filteredIssues = filterIssues(issues, searchTerm, statusFilter);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const searchTerm = searchParams.get("search") || "";
+  const statusFilter = searchParams.get("status") || "all";
+
+  const filteredIssues = filterIssues(
+    issues,
+    searchTerm,
+    statusFilter
+  );
+
+  const handleSearchChange = (value) => {
+    setSearchParams((previousParams) => {
+      const nextParams = new URLSearchParams(previousParams);
+
+      if (value) {
+        nextParams.set("search", value);
+      } else {
+        nextParams.delete("search");
+      }
+
+      return nextParams;
+    });
+  };
+
+  const handleStatusChange = (value) => {
+    setSearchParams((previousParams) => {
+      const nextParams = new URLSearchParams(previousParams);
+
+      if (value === "all") {
+        nextParams.delete("status");
+      } else {
+        nextParams.set("status", value);
+      }
+
+      return nextParams;
+    });
+  };
 
   const handleSaveEdit = (updatedIssue) => {
-  updateIssue(updatedIssue);
-  setEditingIssue(null);
-    };
+    updateIssue(updatedIssue);
+    setEditingIssue(null);
+  };
 
   const handleCancelEdit = () => {
-  setEditingIssue(null);
-    };
+    setEditingIssue(null);
+  };
+
   return (
     <main className={`app ${theme}`}>
       <h1>Issue Tracker Lite</h1>
@@ -35,12 +81,14 @@ function IssueTracker() {
 
       <IssueForm onAddIssue={addIssue} />
 
-      <IssueSearch onSearchChange={setSearchTerm} />
+      <IssueSearch
+        onSearchChange={handleSearchChange}
+      />
 
       <IssueStatusFilter
         statusFilter={statusFilter}
-        onStatusChange={setStatusFilter}
-        />
+        onStatusChange={handleStatusChange}
+      />
 
       <IssueList
         issues={filteredIssues}
