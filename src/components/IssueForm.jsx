@@ -67,7 +67,7 @@ function IssueForm({ onAddIssue }) {
     <form onSubmit={handleSubmit}>
       <h2>Add New Issue</h2>
 
-      {loading ? (
+      {loading ? (  
         <p>Loading users...</p>
           ) : error ? (
         <div>
@@ -97,17 +97,22 @@ function IssueForm({ onAddIssue }) {
       {errors.assignee && <p>{errors.assignee}</p>}
       {errors.priority && <p>{errors.priority}</p>}
 
+        <label htmlFor="title">Title</label>
+
+        <input
+          id="title"
+          type="text"
+          value={title}
+          onChange={handleTitleChange}
+          placeholder="Issue title"
+          required
+        />
+
+        {errors.title && <p role="alert">{errors.title}</p>}
       <textarea
       value={description}
       onChange={handleDescription}
       placeholder="Issue description"/>
-
-      <input 
-      type="text"
-      value={assignee}
-      onChange={handleAssignee}
-      placeholder="Assignee name"
-      required />
 
       <select value={priority} onChange={handlePriority}>
         <option value="low">Low</option>

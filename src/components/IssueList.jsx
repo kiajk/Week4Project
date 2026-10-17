@@ -12,6 +12,14 @@ function IssueList({
 }) {
   const location = useLocation();
 
+  if (issues.length === 0) {
+    return (
+      <p role="status">
+        No issues found. Try a different search term or filter.
+      </p>
+    );
+  }
+
   return (
     <ul>
       {issues.map((issue) => (
@@ -25,9 +33,7 @@ function IssueList({
           ) : (
             <>
               <strong>
-                <Link
-                  to={`/issues/${issue.id}${location.search}`}
-                >
+                <Link to={`/issues/${issue.id}${location.search}`}>
                   {issue.title}
                 </Link>
               </strong>
@@ -42,6 +48,7 @@ function IssueList({
                 onChange={(event) =>
                   onChangeStatus(issue.id, event.target.value)
                 }
+                aria-label={`Change status of ${issue.title}`}
               >
                 <option value="todo">To Do</option>
                 <option value="in-progress">In Progress</option>
