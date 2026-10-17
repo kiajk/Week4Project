@@ -1,57 +1,78 @@
 Issue Tracker Lite
 
-A simple issue management application built with React and Vite.
+A lightweight issue management application built with React and Vite.
+
+The application allows users to create, view, edit, delete, search, and filter issues through a modular component architecture.
 
 Features
 
-* Add new issues
+* Create new issues with form validation
 * Edit existing issues
-* Delete issues
+* Delete existing issues
 * Change issue status
+* Assign issues to users fetched from an external API
 * Search issues by title
 * Filter issues by status
-* Validate issue forms
-* Manage issue data with useReducer
+* Preserve search and filter settings in URL query parameters
+* View issue details on a separate route
+* Navigate back to the issue list while preserving filters
+* Display an empty state when no issues match the current filters
+* Handle loading and error states when fetching users
+* Retry failed API requests
 * Switch between light and dark themes using Context API
+* Manage issue state with useReducer
+
+Technologies
+
+* React
+* Vite
+* JavaScript
+* React Hooks
+* useState
+* useEffect
+* useReducer
+* Context API
+* React Router
+* Fetch API
+* CSS
 
 Component Tree
 
 App
-└── ThemeProvider (Context API)
+└── ThemeProvider
     └── IssueTracker
         ├── IssueForm
         ├── IssueSearch
         ├── IssueStatusFilter
         └── IssueList
             └── EditIssueForm
+App
+└── IssueDetails
 
 Component Responsibilities
 
 App
 
-* Entry point of the application UI.
-* Wraps the application in ThemeProvider.
-* Renders the main issue-tracking interface.
-
-ThemeProvider
-
-* Provides the current theme (light or dark) through Context API.
-* Exposes a toggleTheme function to switch between themes.
-* Keeps theme preferences separate from issue data.
+* Defines the top-level application structure.
+* Configures the application’s routes.
+* Connects the application to the theme context.
 
 IssueTracker
 
-* Coordinates the main application interface.
-* Connects issue management logic to the UI.
-* Manages search, status filtering, and editing state.
-* Reads the theme and theme-toggle function from ThemeContext.
-* Passes the necessary data and callbacks to child components.
+* Coordinates the main issue-tracking interface.
+* Connects issue operations to the UI.
+* Manages the currently edited issue.
+* Reads search and status filters from URL query parameters.
+* Derives the visible issue list from the current issues and filters.
+* Provides theme-related functionality to the interface.
 
 IssueForm
 
 * Collects information for a new issue.
-* Validates the form data.
-* Calls the provided callback to add a new issue.
+* Validates issue data before submission.
+* Fetches available assignees from an external API.
+* Displays loading and error states during user fetching.
+* Allows users to retry failed requests.
 * Resets the form after successful submission.
 
 IssueSearch
@@ -66,9 +87,11 @@ IssueStatusFilter
 
 IssueList
 
-* Renders the filtered list of issues.
+* Renders the filtered issues.
 * Provides controls for changing status, editing, and deleting issues.
-* Displays EditIssueForm when an issue is being edited.
+* Links each issue to its details page.
+* Preserves URL query parameters when navigating to issue details.
+* Displays an empty-state message when no issues match the current filters.
 
 EditIssueForm
 
@@ -76,15 +99,29 @@ EditIssueForm
 * Validates updated issue information.
 * Saves valid changes or cancels editing.
 
+IssueDetails
+
+* Displays the details of a selected issue.
+* Uses route parameters to identify the selected issue.
+* Provides navigation back to the issue list while preserving query parameters.
+* Handles invalid issue identifiers.
+
 State Management
 
 useIssues
 
-A custom hook that provides issue-related operations, including adding, updating, deleting, and changing the status of issues. It encapsulates issue state management using useReducer.
+A custom hook that encapsulates issue state management using useReducer.
+
+It provides operations for:
+
+* Adding issues
+* Updating issues
+* Deleting issues
+* Changing issue status
 
 issuesReducer
 
-Handles issue state transitions through actions such as:
+Handles issue state transitions through the following actions:
 
 * ADD_ISSUE
 * UPDATE_ISSUE
@@ -93,36 +130,98 @@ Handles issue state transitions through actions such as:
 
 ThemeContext
 
-Provides the current theme (light or dark) and a toggleTheme function to components inside ThemeProvider.
+Provides the current theme and a toggleTheme function through Context API.
 
-Theme state is managed separately from issue data because it represents a UI preference rather than application issue data.
+Theme state is managed separately from issue data because it represents a UI preference rather than issue-related application data.
 
-filterIssues
+Derived Data
 
-A utility function that derives the visible issue list from the complete issue collection, search term, and selected status.
+The filterIssues utility derives the visible issue list from:
 
-Filtering does not require separate state because the filtered list can be calculated from existing values.
+* The complete issue collection
+* The search term
+* The selected status
 
-validateIssue
+The filtered list is calculated from existing state rather than stored as separate state.
 
-A utility function that validates issue data before it is added or updated.
+URL Query Parameters
 
-Technologies
+Search and status filters are synchronized with URL query parameters.
 
-* React
-* Vite
-* JavaScript
-* React Hooks
-* useReducer
-* Context API
-* CSS
+This allows the application to preserve filter settings during navigation and browser refreshes.
+
+Form Validation
+
+The validateIssue utility validates issue data before it is added or updated.
+
+It checks required fields and validates the selected priority.
+
+Project Structure
+
+src/
+├── components/
+├── context/
+├── data/
+├── hooks/
+├── reducers/
+├── utils/
+├── App.jsx
+└── main.jsx
 
 Getting Started
 
-Install dependencies
+Prerequisites
+
+* Node.js
+* npm
+
+Installation
+
+Clone the repository and navigate to the project directory.
+
+Install the dependencies:
 
 npm install
 
-Start the development server
+Development Server
+
+Start the development server:
 
 npm run dev
+
+Open the local URL provided by Vite in your browser.
+
+Production Build
+
+Create a production build:
+
+npm run build
+
+Design Decisions
+
+useReducer for Issue Management
+
+useReducer centralizes issue-related state transitions and keeps update logic separate from UI components.
+
+Context API for Theme
+
+Context API makes the current theme and theme-toggle functionality available without passing those values through every intermediate component.
+
+Derived Filtering
+
+Search and status filtering are calculated from the existing issue collection and filter values. This avoids maintaining redundant filtered state.
+
+URL-Based Filters
+
+Query parameters preserve search and status filters across navigation and browser refreshes.
+
+Component Separation
+
+The interface is divided into smaller components with clear responsibilities to improve readability, maintainability, and reuse.
+
+Notes
+
+* The initial issue collection is provided by mock data.
+* Available assignees are fetched from an external API.
+* Issue data is managed in application state and is not persisted to a database.
+* Refreshing the page resets issue changes unless persistence is implemented separately.
