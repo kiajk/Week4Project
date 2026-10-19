@@ -1,11 +1,19 @@
-import IssueList from "./components/IssueList";
+import { Routes, Route } from "react-router";
+import IssueTracker from "./components/IssueTracker";
+import { ThemeProvider } from "./context/ThemeContext";
+import UsersExplorer from "./components/UsersExplorer";
+import IssueDetails from "./components/IssueDetails";
 
 function App() {
   return (
-    <main>
-      <h1>Issue Tracker Lite</h1>
-      <IssueList />
-    </main>
+    <ThemeProvider>
+      <Routes>
+        <Route path="/issues" element={<IssueTracker />} />
+        <Route path="/issues/:issueId" element={<IssueDetails />} />
+      </Routes>
+
+      <UsersExplorer />
+    </ThemeProvider>
   );
 }
 

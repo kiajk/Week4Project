@@ -1,30 +1,38 @@
-import { ADD_ISSUE, DELETE_ISSUE, CHANGE_STATUS } from "./issueActions";
+import { ADD_ISSUE, DELETE_ISSUE, CHANGE_STATUS,  UPDATE_ISSUE } from "./issuesActions";
 
-function addIssue (issues, newIssues) {
-    return [...issues, newIssues];
+function addIssue(issues, newIssue) {
+  return [...issues, newIssue];
+}
+
+function updateIssue(issues, updatedIssue) {
+  return issues.map((issue) =>
+    issue.id === updatedIssue.id
+      ? { ...issue, ...updatedIssue }
+      : issue
+  );
 }
 
 function deleteIssue(issues, id) {
-    return issues.filter((issue) => issue.id !==id);
+  return issues.filter((issue) => issue.id !== id);
 }
 
 function changeStatus(issues, id, status) {
-    return issues.map((issue) => {
-        issue.id ===id ? {...issue, status } : issue
-    });
+  return issues.map((issue) =>
+    issue.id === id ? { ...issue, status } : issue
+  );
 }
-export function issueReducer(issues, action) {
-    switch (action.type) {
-        case ADD_ISSUE:
-            return addIssue(issues, action, payload);
-    
-         case DELETE_ISSUE:
-             return deleteIssue(issues, action, payload);
 
-         case CHANGE_STATUS:
-            return changeStatus(issues, action.payload.id, action.payload.status);
-            
-            default:
-                return issues;
-    }
+export function issuesReducer(issues, action) {
+  switch (action.type) {
+    case ADD_ISSUE:
+      return addIssue(issues, action.payload);
+    case DELETE_ISSUE:
+      return deleteIssue(issues, action.payload.id);
+    case CHANGE_STATUS:
+      return changeStatus(issues, action.payload.id, action.payload.status);
+    case UPDATE_ISSUE:
+      return updateIssue(issues, action.payload);
+    default:
+      return issues;
+  }
 }
